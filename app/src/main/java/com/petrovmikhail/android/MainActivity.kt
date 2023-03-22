@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
                     Column {
                         Logotype()
                         Spacer(modifier = Modifier.weight(1f))
-                        SingUpForm()
+                        SignUpForm()
                     }
                 }
             }
@@ -79,7 +79,7 @@ fun Logotype() {
 }
 
 @Composable
-fun SingUpForm() {
+fun SignUpForm() {
     Column(
         modifier = Modifier
             .padding(start = 15.dp, end = 15.dp),
