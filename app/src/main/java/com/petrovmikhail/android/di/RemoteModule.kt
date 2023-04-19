@@ -1,4 +1,4 @@
-package com.petrovmikhail.android.data
+package com.petrovmikhail.android.di
 
 import dagger.Module
 import dagger.Provides

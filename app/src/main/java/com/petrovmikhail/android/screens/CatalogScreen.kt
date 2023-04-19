@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Text
@@ -23,7 +24,7 @@ fun CatalogScreen() {
     val catalogViewModel: CatalogViewModel = viewModel()
     val viewState by catalogViewModel.viewState.collectAsState()
 
-    Column() {
+    Column {
         TextField(
             value = viewState.searchQuery,
             onValueChange = { catalogViewModel.obtainEvent(CatalogScreenEvent.ChangeQuery(it)) }
@@ -35,31 +36,42 @@ fun CatalogScreen() {
         ) {
             Text(text = "Search")
         }
-        LazyColumn() {
-            item {
-                Text(text = "nearest:")
+        Row() {
+            val popularColor = if (viewState.category == RestaurantsCategory.Popular) Color(0xFF444444) else Color(0xFFBBBBBB)
+            val nearestColor = if (viewState.category == RestaurantsCategory.Nearest) Color(0xFF444444) else Color(0xFFBBBBBB)
+            Box(
+                modifier = Modifier
+                    .background(popularColor)
+                    .clickable { catalogViewModel.obtainEvent(CatalogScreenEvent.ChangeRestaurantsCategory(RestaurantsCategory.Popular)) }
+            ) {
+                Text(text = "Popular")
             }
-            items(viewState.nearestRestaurant) { restaurant ->
-                AsyncImage(
-                    modifier = Modifier.size(200.dp, 200.dp),
-                    model = restaurant.logo,
-                    contentDescription = null
-                )
-                Text(text = restaurant.name)
-                Text(text = restaurant.deliveryTime)
+            Box(
+                modifier = Modifier
+                    .background(nearestColor)
+                    .clickable { catalogViewModel.obtainEvent(CatalogScreenEvent.ChangeRestaurantsCategory(RestaurantsCategory.Nearest)) }
+            ) {
+                Text(text = "Nearest")
             }
-            item {
-                Text(text = "popular:")
-            }
-            items(viewState.popularRestaurant) { restaurant ->
-                AsyncImage(
-                    modifier = Modifier.size(200.dp, 200.dp),
-                    model = restaurant.logo,
-                    contentDescription = null
-                )
-                Text(text = restaurant.name)
-                Text(text = restaurant.deliveryTime)
-            }
+        }
+        when (viewState.category) {
+            RestaurantsCategory.Popular -> Catalog(viewState.popularRestaurant)
+            RestaurantsCategory.Nearest -> Catalog(viewState.nearestRestaurant)
+        }
+    }
+}
+
+@Composable
+fun Catalog(restaurants: List<Restaurant>) {
+    LazyColumn() {
+        items(restaurants) { restaurant ->
+            AsyncImage(
+                modifier = Modifier.size(200.dp, 200.dp),
+                model = restaurant.logo,
+                contentDescription = null
+            )
+            Text(text = restaurant.name)
+            Text(text = restaurant.deliveryTime)
         }
     }
 }
