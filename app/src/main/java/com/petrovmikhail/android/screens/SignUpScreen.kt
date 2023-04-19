@@ -8,15 +8,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.petrovmikhail.android.R
 import com.petrovmikhail.android.components.Logotype
 import com.petrovmikhail.android.components.SignUpForm
 
 @Composable
-fun SignUpScreen() {
-    val signUpViewModel: SignUpViewModel = viewModel()
-
+fun SignUpScreen(signUpViewModel: SignUpViewModel, navController: NavController) {
     Image(
         alignment = Alignment.TopStart,
         contentScale = ContentScale.FillWidth,
@@ -26,6 +24,6 @@ fun SignUpScreen() {
     Column {
         Logotype()
         Spacer(modifier = Modifier.weight(1f))
-        SignUpForm(signUpViewModel)
+        SignUpForm(signUpViewModel, navController)
     }
 }

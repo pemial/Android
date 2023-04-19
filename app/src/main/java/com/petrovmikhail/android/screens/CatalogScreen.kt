@@ -11,17 +11,16 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.TextField
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 
 @Composable
-fun CatalogScreen() {
-    val catalogViewModel: CatalogViewModel = viewModel()
+fun CatalogScreen(catalogViewModel: CatalogViewModel, navController: NavController) {
     val viewState by catalogViewModel.viewState.collectAsState()
 
     Column {
@@ -55,23 +54,32 @@ fun CatalogScreen() {
             }
         }
         when (viewState.category) {
-            RestaurantsCategory.Popular -> Catalog(viewState.popularRestaurant)
-            RestaurantsCategory.Nearest -> Catalog(viewState.nearestRestaurant)
+            RestaurantsCategory.Popular -> Catalog(viewState.popularRestaurant, navController)
+            RestaurantsCategory.Nearest -> Catalog(viewState.nearestRestaurant, navController)
         }
     }
 }
 
 @Composable
-fun Catalog(restaurants: List<Restaurant>) {
+fun Catalog(restaurants: List<Restaurant>, navController: NavController) {
     LazyColumn() {
         items(restaurants) { restaurant ->
-            AsyncImage(
-                modifier = Modifier.size(200.dp, 200.dp),
-                model = restaurant.logo,
-                contentDescription = null
-            )
-            Text(text = restaurant.name)
-            Text(text = restaurant.deliveryTime)
+            RestaurantCell(restaurant, navController)
         }
+    }
+}
+
+@Composable
+fun RestaurantCell(restaurant: Restaurant, navController: NavController) {
+    Column(
+        modifier = Modifier.clickable { navController.navigate("detail/${restaurant.name}") }
+    ) {
+        AsyncImage(
+            modifier = Modifier.size(200.dp, 200.dp),
+            model = restaurant.logo,
+            contentDescription = null
+        )
+        Text(text = restaurant.name)
+        Text(text = restaurant.deliveryTime)
     }
 }

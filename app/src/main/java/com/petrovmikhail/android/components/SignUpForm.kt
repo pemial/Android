@@ -16,12 +16,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.petrovmikhail.android.R
 import com.petrovmikhail.android.screens.SignUpScreenEvent
 import com.petrovmikhail.android.screens.SignUpViewModel
 
 @Composable
-fun SignUpForm(viewModel: SignUpViewModel) {
+fun SignUpForm(viewModel: SignUpViewModel, navController: NavController) {
     val viewState by viewModel.viewState.collectAsState()
 
     Column(
@@ -82,7 +83,7 @@ fun SignUpForm(viewModel: SignUpViewModel) {
                 .height(50.dp)
                 .width(200.dp)
                 .align(Alignment.CenterHorizontally)
-                .clickable { viewModel.obtainEvent(SignUpScreenEvent.CreateAccountClicked) },
+                .clickable { viewModel.obtainEvent(SignUpScreenEvent.CreateAccountClicked(navController)) },
             contentAlignment = Alignment.Center
         ) {
             Text(
